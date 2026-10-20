@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>adventure.rb — Ruby in your browser</title>
+    <meta name="description" content="Write and run Ruby in your browser with an interactive terminal, powered by ruby.wasm." />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/lib/codemirror.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/theme/material-darker.min.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="toolbar">
+      <h1>adventure<span class="accent">.rb</span></h1>
+      <div class="actions">
+        <label class="examples">
+          <span class="visually-hidden">Example</span>
+          <select id="examples" aria-label="Load an example"></select>
+        </label>
+        <button id="run" class="primary" disabled title="Run (Ctrl/⌘ + Enter)">▶ Run</button>
+        <button id="stop" disabled title="Stop the running program (Ctrl + C in the terminal)">■ Stop</button>
+        <button id="reset" disabled title="Start a fresh Ruby VM">↺ Reset</button>
+        <button id="clear" title="Clear the terminal (Ctrl + L)">Clear</button>
+        <button id="share" title="Copy a link to this code">Share</button>
+      </div>
+      <span id="status" class="status" role="status">Loading Ruby…</span>
+    </header>
+
+    <main class="workspace">
+      <section class="pane editor-pane" aria-label="Editor">
+        <div class="pane-title">main.rb</div>
+        <textarea id="editor" aria-label="Ruby source code"></textarea>
+      </section>
+      <div class="divider" id="divider" role="separator" aria-orientation="vertical" tabindex="0"></div>
+      <section class="pane terminal-pane" aria-label="Terminal">
+        <div class="pane-title">Terminal <span class="hint">irb · type Ruby and press Enter</span></div>
+        <div id="terminal" class="terminal">
+          <pre id="term-output"><span id="term-input-line" hidden><span id="term-prompt"></span><span id="term-input" contenteditable="true" spellcheck="false" autocapitalize="off" autocorrect="off" role="textbox" aria-label="Terminal input"></span></span></pre>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/lib/codemirror.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/mode/ruby/ruby.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/addon/edit/matchbrackets.min.js"></script>
+    <script src="examples.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

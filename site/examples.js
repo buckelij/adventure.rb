@@ -1,0 +1,122 @@
+window.EXAMPLES = [
+  {
+    name: "Text adventure",
+    code: `# A tiny text adventure. Press Run, then type commands in the terminal.
+ROOMS = {
+  hall:    { desc: "You are in a dusty hall. Doors lead north and east.",
+             exits: { "north" => :library, "east" => :kitchen } },
+  library: { desc: "Shelves of crumbling books surround you. A brass key glints on a desk.",
+             exits: { "south" => :hall }, item: "key" },
+  kitchen: { desc: "A cold kitchen. A locked door is set into the east wall.",
+             exits: { "west" => :hall, "east" => :garden } },
+  garden:  { desc: "Sunlight! You have escaped into an overgrown garden.", exits: {} },
+}
+
+print "What is your name, adventurer? "
+name = gets&.chomp
+name = "stranger" if name.nil? || name.empty?
+puts "Welcome, #{name}! Type 'help' for commands."
+
+room = :hall
+inventory = []
+
+loop do
+  puts
+  puts ROOMS[room][:desc]
+  if room == :garden
+    puts "\\e[32mYou win, #{name}!\\e[0m"
+    break
+  end
+
+  print "> "
+  input = gets
+  break puts("\\nFarewell!") if input.nil?
+  verb, noun = input.strip.downcase.split(" ", 2)
+
+  case verb
+  when "go"
+    target = ROOMS[room][:exits][noun]
+    if target == :garden && !inventory.include?("key")
+      puts "The door is locked."
+    elsif target
+      room = target
+    else
+      puts "You can't go that way."
+    end
+  when "take"
+    if ROOMS[room][:item] == noun
+      inventory << ROOMS[room].delete(:item)
+      puts "Taken: #{noun}."
+    else
+      puts "There is no #{noun} here."
+    end
+  when "inventory", "i"
+    puts inventory.empty? ? "You carry nothing." : "You carry: #{inventory.join(", ")}"
+  when "help"
+    puts "Commands: go <direction>, take <item>, inventory, quit"
+  when "quit"
+    puts "Farewell, #{name}!"
+    break
+  else
+    puts "I don't understand '#{input.strip}'."
+  end
+end
+`,
+  },
+  {
+    name: "Hello, name",
+    code: `print "What's your name? "
+name = gets.chomp
+puts "Hello, #{name}! 👋"
+
+print "How old are you? "
+age = gets.to_i
+puts "In ten years you'll be #{age + 10}."
+`,
+  },
+  {
+    name: "Number guessing",
+    code: `secret = rand(1..100)
+puts "I'm thinking of a number between 1 and 100."
+
+1.step do |tries|
+  print "Guess ##{tries}: "
+  guess = gets&.to_i or break
+  if guess < secret
+    puts "Too low!"
+  elsif guess > secret
+    puts "Too high!"
+  else
+    puts "You got it in #{tries} tries! 🎉"
+    break
+  end
+end
+`,
+  },
+  {
+    name: "Countdown with sleep",
+    code: `5.downto(1) do |i|
+  puts "#{i}..."
+  sleep 1
+end
+puts "\\e[1;33mLiftoff! 🚀\\e[0m"
+`,
+  },
+  {
+    name: "Classes & blocks",
+    code: `class Greeter
+  def initialize(greeting) = @greeting = greeting
+
+  def greet(*names)
+    names.map { |name| "#{@greeting}, #{name}!" }
+  end
+end
+
+greeter = Greeter.new("Hello")
+puts greeter.greet("Matz", "world")
+
+# After running, try this in the terminal:
+#   greeter.greet("you")
+`,
+  },
+];
