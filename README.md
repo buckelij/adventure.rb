@@ -8,7 +8,7 @@ powered by [ruby.wasm](https://github.com/ruby/ruby.wasm) (CRuby 3.4 compiled to
 
 - **Default example**: choose Mordor or The Shire in a beginner-friendly text adventure.
   A built-in `Pictures` class provides placeholder ASCII art through `MOUNTAIN_SCENE`,
-  `BEACH_SCENE`, `DRAGON`, and `SEA_DRAGON`; no import is needed.
+  `BEACH_SCENE`, `FLOWER`, `DRAGON`, and `SEA_DRAGON`; no import is needed.
 - **▶ Run** (Ctrl/⌘ + Enter) runs `main.rb` in a fresh Ruby VM. When it finishes, the terminal
   becomes an `irb`-style REPL where the program's top-level variables and methods are still available.
 - **Interactive input**: `gets`, `STDIN.gets`, `$stdin.each_line`, `readline` and similar pause the

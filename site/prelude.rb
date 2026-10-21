@@ -14,11 +14,53 @@ class Pictures
   ART
 
   BEACH_SCENE = <<~'ART'
-       \ | /
-      -- O --
-       / | \
-    ~~~~~~~~~~~~~~
-    ..............
+      \ | /
+    -- O --
+      / | \
+  ~~~~~~~~~~~~~~
+  ..............
+  ART
+
+  CAT = <<~'ART'
+     /\
+   ( o.o )
+    > ^ <
+  ART
+
+  COW = <<~'ART'
+   ^__^
+  (o  o)
+  (____)
+  || ||
+  ART
+
+  FLOWER = <<~'ART'
+  ⠀⠀⠀⠀⠀⢠⢄⡠⡄
+  ⠀⠀⠀⠀⠀⢰⠃⠀⠀⠈⡆
+  ⠀⡤⠔⠒⠢⢼⡀⢀⡀⢀⡧⠔⠒⠢⢤
+  ⡂ ⠀⠀⠀⠀⠑⣘⣁⠊⣀⠀⠀  ⠘⡄
+  ⠀⠑⠤⣀⣀⡠⠭⡧⡼⠩⠅⣀⣀⠤⠊
+      ⡔⠁⢀⠞⢀⡇⠓⢀⠈⠳⡀
+    ⢰⡁⠀⠀ ⡸⢣⠀⠀⠀ ⠀⡇
+  ⠀⠀⠀⠉⠧⠔⠊⠀⠀⠙⠲⠴⠉⠁
+  ART
+
+  GIRLSCOUTS = <<~'ART'
+  ............*#######*............
+  .........###############.........
+  .........###############*........
+  .........##########.**###........
+  ..###############......###.*###..
+  .*#############........###*.*##*.
+  .*############........*###..*###.
+  .###########....*#######...*####.
+  .*########*...*####........#####.
+  ..########....####*...*########*.
+  ...*###*...*###*...###########...
+  ..........####.....####*.........
+  ..........###*...*#####..........
+  ..............*#####*............
+  ..............*####..............
   ART
 
   DRAGON = <<~'ART'
@@ -31,7 +73,7 @@ class Pictures
 <  >      |(,,) )__)
  ||      /    \)___)\
  | \____(      )___) )___
-  \______(_______;;; __;;;
+  \______(_______;;; __;;x
   ART
 
   SEA_DRAGON = <<~'ART'
@@ -71,11 +113,13 @@ module WebRuby
 
     def each_line(*args, chomp: false)
       return enum_for(:each_line, chomp: chomp) unless block_given?
+
       while (line = gets(chomp: chomp))
         yield line
       end
       self
     end
+
     alias each each_line
 
     def readlines(*args, chomp: false) = each_line(chomp: chomp).to_a
@@ -127,9 +171,16 @@ module WebRuby
       $stderr.write("#{error.message.chomp} (SyntaxError)\n")
       return
     end
+
     backtrace = (error.backtrace || []).select { |l| l.start_with?(file) }
     message = error.detailed_message(highlight: false)
-    lines = backtrace.empty? ? [message] : ["#{backtrace.first}: #{message}", *backtrace.drop(1).map { |l| "\tfrom #{l}" }]
+    lines =
+      if backtrace.empty?
+        [message]
+      else
+        ["#{backtrace.first}: #{message}", *backtrace.drop(1).map { |line| "\tfrom #{line}" }]
+      end
+
     $stderr.write(lines.join("\n") + "\n")
   rescue Exception
     $stderr.write("#{error.class}: #{error.message}\n")
@@ -150,6 +201,7 @@ module Kernel
   def sleep(seconds = nil)
     started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     raise ArgumentError, "time interval must not be negative" if seconds&.negative?
+
     JS.global.call(:__rubySleep, seconds.nil? ? -1 : (seconds * 1000).to_f).await
     (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started).round
   end

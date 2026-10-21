@@ -47,6 +47,10 @@ class PreludeTest < Minitest::Test
     assert_predicate STDIN, :tty?
   end
 
+  def test_pictures_includes_flower_art
+    assert_includes Pictures::FLOWER, "⢠⢄"
+  end
+
   def test_sleep_delegates_to_js_in_milliseconds
     assert_kind_of Integer, sleep(0.25)
     assert_equal [[:__rubySleep, 250.0]], @js.calls
