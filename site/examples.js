@@ -1,5 +1,74 @@
 window.EXAMPLES = [
   {
+    name: "Mordor or The Shire",
+    code: `# puts - put words on the screen
+# gets - get words from the keyboard
+# =    - remember a value (a number or words)
+# ==   - compare two values
+# if   - do something when two values are the same
+
+# Pictures is available by default.
+
+loop do
+  puts "Welcome to my game. Try to do it if you dare!"
+  puts "Do you want to go to 'Mordor' or 'The Shire'?"
+
+  location = ""
+
+  answer = gets.chomp
+  if answer == "Mordor"
+    location = "Mordor"
+    puts Pictures::MOUNTAIN_SCENE
+    puts "Put the ring in the volcano"
+  elsif answer == "The Shire"
+    location = "The Shire"
+    puts Pictures::BEACH_SCENE
+    puts "Make a hobbit house"
+  else
+    puts "That's not an option!"
+  end
+
+  if location == "Mordor"
+    puts "Do you want to fight the orcs?"
+    answer = gets.chomp
+    puts "Great! Except it's dragon time."
+    puts Pictures::DRAGON
+    puts "The dragon says 'What's the password'?"
+    password = "dragon party time"
+    answer = gets.chomp
+    if answer == password
+      puts "You may pass"
+    else
+      puts "Wrong! You must run!"
+    end
+  end
+
+  if location == "The Shire"
+    puts "Do you want to play with the hobbits?"
+    answer = gets.chomp
+    puts "#{answer}? Either way, a river dragon wants to play."
+    puts Pictures::SEA_DRAGON
+  end
+
+  coinflip = ""
+  coin = rand(2)
+  if coin == 0
+    coinflip = "HEADS"
+  else
+    coinflip = "TAILS"
+  end
+  puts "Time to flip a coin: #{coinflip}"
+
+  puts "THE END"
+  puts "Play again? yes/no"
+  answer = gets.chomp
+  if answer == "no"
+    exit
+  end
+end
+`,
+  },
+  {
     name: "Text adventure",
     code: `# A tiny text adventure. Press Run, then type commands in the terminal.
 ROOMS = {

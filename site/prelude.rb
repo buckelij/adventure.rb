@@ -5,6 +5,49 @@ require "js"
 $stdout.sync = true
 $stderr.sync = true
 
+class Pictures
+  MOUNTAIN_SCENE = <<~'ART'
+       /\
+      /  \    /\
+     /    \  /  \
+    /______\/____\
+  ART
+
+  BEACH_SCENE = <<~'ART'
+       \ | /
+      -- O --
+       / | \
+    ~~~~~~~~~~~~~~
+    ..............
+  ART
+
+  DRAGON = <<~'ART'
+                 \||/
+                |  @__oo
+      /\  /\   / (__,,,|
+     ) /^\) ^\/ _)
+     )   _ /  / _)
+ /\  )/\/ ||  | )_)
+<  >      |(,,) )__)
+ ||      /    \)___)\
+ | \____(      )___) )___
+  \______(_______;;; __;;;
+  ART
+
+  SEA_DRAGON = <<~'ART'
+             `- -._  - - - -.
+              `.     `--.     `.
+        ,...  \          `.    ,-`.,
+      (,     `/   \    ,__.__`.'
+     ,'  ,--.  `,   \ '
+    `o, )    \  :    |
+      \,,'    /  /   /
+      | :    /  ,' ,-/.    ,--.
+      \'   /  ,' /  _  \  /  _  \~
+            `.__,'   `.__,'   `.__,'
+  ART
+end
+
 module WebRuby
   INCOMPLETE_INPUT = /unexpected end-of-input|meets end of file|before EOF|to close the/
 

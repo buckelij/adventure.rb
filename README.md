@@ -6,6 +6,9 @@ Write and run Ruby in your browser, in the spirit of [TryRuby](https://github.co
 The editor sits on the left and an interactive terminal on the right. Everything is a static site
 powered by [ruby.wasm](https://github.com/ruby/ruby.wasm) (CRuby 3.4 compiled to WebAssembly).
 
+- **Default example**: choose Mordor or The Shire in a beginner-friendly text adventure.
+  A built-in `Pictures` class provides placeholder ASCII art through `MOUNTAIN_SCENE`,
+  `BEACH_SCENE`, `DRAGON`, and `SEA_DRAGON`; no import is needed.
 - **▶ Run** (Ctrl/⌘ + Enter) runs `main.rb` in a fresh Ruby VM. When it finishes, the terminal
   becomes an `irb`-style REPL where the program's top-level variables and methods are still available.
 - **Interactive input**: `gets`, `STDIN.gets`, `$stdin.each_line`, `readline` and similar pause the
@@ -35,6 +38,7 @@ Run the tests for the Ruby prelude (uses a stub of ruby.wasm's `js` library, so 
 
 ```sh
 ruby test/prelude_test.rb
+node --test test/examples_test.js
 ```
 
 ## Deployment
