@@ -391,6 +391,16 @@
   async function downloadRuby() {
     const response = await fetch(RUBY_WASM_URL);
     if (!response.ok) throw new Error(`Failed to download Ruby (HTTP ${response.status})`);
+    const contentType = response.headers.get("content-type")?.split(";")[0].trim();
+    if (
+      response.body &&
+      typeof WebAssembly.compileStreaming === "function" &&
+      contentType === "application/wasm"
+    ) {
+      ui.status.textContent = "Downloading and compiling Ruby…";
+      return WebAssembly.compileStreaming(response);
+    }
+
     const total = Number(response.headers.get("content-length")) || 0;
     if (!response.body) return WebAssembly.compile(await response.arrayBuffer());
 
