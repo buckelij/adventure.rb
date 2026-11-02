@@ -212,7 +212,14 @@ button.primary:hover:not(:disabled) { background: var(--accent-2); }
 .picture-status { min-height: 1.5em; margin: 0; padding: 0 16px 12px; color: var(--accent-2); font-size: 0.85rem; }
 
 @media (max-width: 800px) {
-  body { height: 100dvh; }
+  body {
+    position: fixed;
+    top: var(--viewport-top, 0px);
+    left: 0;
+    width: 100%;
+    height: var(--viewport-height, 100dvh);
+    overflow: hidden;
+  }
   .toolbar { flex-shrink: 0; }
   .workspace { flex-direction: column; }
   .editor-pane, .terminal-pane { flex: 1 1 0 !important; }

@@ -453,12 +453,22 @@
     requestAnimationFrame(() => {
       if (document.activeElement !== ui.input) return;
       scrollToBottom();
-      ui.input.scrollIntoView({ block: "nearest", inline: "nearest" });
     });
   }
 
-  ui.input.addEventListener("focus", keepInputVisible);
-  window.visualViewport?.addEventListener("resize", keepInputVisible);
+  function updateViewport() {
+    const viewport = window.visualViewport;
+    if (viewport && viewport.scale === 1) {
+      document.documentElement.style.setProperty("--viewport-height", `${viewport.height}px`);
+      document.documentElement.style.setProperty("--viewport-top", `${viewport.offsetTop}px`);
+    }
+    keepInputVisible();
+  }
+
+  ui.input.addEventListener("focus", updateViewport);
+  window.visualViewport?.addEventListener("resize", updateViewport);
+  window.visualViewport?.addEventListener("scroll", updateViewport);
+  updateViewport();
 
   function placeCaretAtEnd() {
     const range = document.createRange();
