@@ -10,7 +10,6 @@
   const ui = {
     run: $("run"),
     stop: $("stop"),
-    clear: $("clear"),
     share: $("share"),
     examples: $("examples"),
     status: $("status"),
@@ -815,10 +814,6 @@
 
   ui.run.addEventListener("click", run);
   ui.stop.addEventListener("click", stop);
-  ui.clear.addEventListener("click", () => {
-    clearTerminal();
-    if (!ui.inputLine.hidden) ui.input.focus({ preventScroll: true });
-  });
 
   // ---------------------------------------------------------------------------
   // Resizable split

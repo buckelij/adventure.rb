@@ -7,7 +7,7 @@
     <meta name="description" content="Write and run Ruby in your browser with an interactive terminal, powered by ruby.wasm." />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/lib/codemirror.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/theme/material-darker.min.css" />
-    <link rel="stylesheet" href="style.css?v=20261102-viewport" />
+    <link rel="stylesheet" href="style.css?v=20261102-toolbar" />
   </head>
   <body>
     <header class="toolbar">
@@ -22,10 +22,11 @@
         </label>
         <button id="run" class="primary" disabled title="Run (Ctrl/⌘ + Enter)">▶ Run</button>
         <button id="stop" disabled title="Stop the running program (Ctrl + C in the terminal)">■ Stop</button>
-        <button id="clear" title="Clear the terminal (Ctrl + L)">Clear</button>
-        <button id="share" title="Copy a link to this code">Share</button>
-        <button id="pictures" disabled title="Preview available pictures">
-          <img class="button-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@0.468.0/icons/images.svg" alt="" width="16" height="16" />Pictures
+        <button id="share" class="toolbar-icon" aria-label="Share" title="Share: copy a link to this code">
+          <img class="button-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@0.468.0/icons/share-2.svg" alt="" width="16" height="16" />
+        </button>
+        <button id="pictures" class="toolbar-icon" disabled aria-label="Pictures" title="Preview available pictures">
+          <img class="button-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@0.468.0/icons/images.svg" alt="" width="16" height="16" />
         </button>
         <a class="docs-link" href="https://docs.ruby-lang.org/en/3.4/" target="_blank" rel="noopener noreferrer" title="Official Ruby documentation (opens in a new tab)">
           Ruby docs<img class="button-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@0.468.0/icons/external-link.svg" alt="" width="16" height="16" />
@@ -77,6 +78,6 @@
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/mode/ruby/ruby.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/addon/edit/matchbrackets.min.js"></script>
     <script src="examples.js?v=20261102-accordion"></script>
-    <script src="app.js?v=20261102-viewport"></script>
+    <script src="app.js?v=20261102-toolbar"></script>
   </body>
 </html>
