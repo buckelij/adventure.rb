@@ -10,7 +10,6 @@
   const ui = {
     run: $("run"),
     stop: $("stop"),
-    reset: $("reset"),
     clear: $("clear"),
     share: $("share"),
     examples: $("examples"),
@@ -447,6 +446,20 @@
     ui.terminal.scrollTop = ui.terminal.scrollHeight;
   }
 
+  const touchInput = window.matchMedia("(hover: none) and (pointer: coarse)");
+
+  function keepInputVisible() {
+    if (document.activeElement !== ui.input) return;
+    requestAnimationFrame(() => {
+      if (document.activeElement !== ui.input) return;
+      scrollToBottom();
+      ui.input.scrollIntoView({ block: "nearest", inline: "nearest" });
+    });
+  }
+
+  ui.input.addEventListener("focus", keepInputVisible);
+  window.visualViewport?.addEventListener("resize", keepInputVisible);
+
   function placeCaretAtEnd() {
     const range = document.createRange();
     range.selectNodeContents(ui.input);
@@ -456,7 +469,7 @@
     selection.addRange(range);
   }
 
-  function showInput(prompt, { focus = true } = {}) {
+  function showInput(prompt, { focus = !touchInput.matches } = {}) {
     flushOutput();
     ui.prompt.textContent = prompt;
     ui.input.textContent = "";
@@ -509,7 +522,6 @@
     state.mode = mode;
     const loaded = state.module !== null;
     ui.run.disabled = !loaded;
-    ui.reset.disabled = !loaded;
     ui.stop.disabled = !(mode === "busy" || mode === "stdin");
     ui.status.classList.toggle("running", mode === "busy" || mode === "stdin");
     ui.status.classList.remove("error");
@@ -692,19 +704,8 @@
     }
   }
 
-  async function reset() {
-    if (!state.module) return;
-    clearTerminal();
-    try {
-      await startVM();
-      banner();
-      showReplPrompt();
-    } catch {
-      // Status already shows the error.
-    }
-  }
-
   function submitInput() {
+    if (touchInput.matches) ui.input.blur();
     const text = ui.input.textContent.replace(/\u00a0/g, " ");
     if (state.mode === "stdin") {
       const [first, ...rest] = text.split("\n");
@@ -804,7 +805,6 @@
 
   ui.run.addEventListener("click", run);
   ui.stop.addEventListener("click", stop);
-  ui.reset.addEventListener("click", reset);
   ui.clear.addEventListener("click", () => {
     clearTerminal();
     if (!ui.inputLine.hidden) ui.input.focus({ preventScroll: true });

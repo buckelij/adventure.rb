@@ -13,7 +13,7 @@ powered by [ruby.wasm](https://github.com/ruby/ruby.wasm) (CRuby 3.4 compiled to
   becomes an `irb`-style REPL where the program's top-level variables and methods are still available.
 - **Interactive input**: `gets`, `STDIN.gets`, `$stdin.each_line`, `readline` and similar pause the
   program and wait for you to type in the terminal. Ctrl-D sends EOF (`gets` returns `nil`).
-- **■ Stop** (or Ctrl-C) kills a runaway program, and ↺ **Reset** starts a fresh VM.
+- **■ Stop** (or Ctrl-C) kills a runaway program.
 - **Your code lives in the URL**: the address bar updates as you type (without adding back-button
   entries), so reopening an accidentally closed tab brings your work back. **Share** copies that link.
   Code is deflate-compressed and base64url-encoded (`#z=…`); plain `#code=…` links also work.
