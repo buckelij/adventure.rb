@@ -23,7 +23,8 @@
     divider: $("divider"),
     editorPane: document.querySelector(".editor-pane"),
     editorToggle: $("editor-toggle"),
-    editorToggleIcon: $("editor-toggle-icon"),
+    terminalPane: document.querySelector(".terminal-pane"),
+    terminalToggle: $("terminal-toggle"),
     pictures: $("pictures"),
     picturesDialog: $("pictures-dialog"),
     pictureGallery: $("picture-gallery"),
@@ -52,17 +53,24 @@
   const stackedLayout = window.matchMedia("(max-width: 800px)");
 
   function setEditorExpanded(expanded) {
-    ui.editorPane.classList.toggle("editor-collapsed", !expanded);
-    ui.editorToggle.setAttribute("aria-expanded", String(expanded));
-    ui.editorToggleIcon.textContent = expanded ? "-" : "+";
-    if (expanded) editor.refresh();
+    const editorExpanded = !stackedLayout.matches || expanded;
+    const terminalExpanded = !stackedLayout.matches || !expanded;
+    ui.editorPane.classList.toggle("editor-collapsed", !editorExpanded);
+    ui.editorToggle.setAttribute("aria-expanded", String(editorExpanded));
+    ui.terminalPane.classList.toggle("terminal-collapsed", !terminalExpanded);
+    ui.terminalToggle.setAttribute("aria-expanded", String(terminalExpanded));
+    if (editorExpanded) editor.refresh();
+    if (terminalExpanded) ui.terminal.scrollTop = ui.terminal.scrollHeight;
   }
 
   ui.editorToggle.addEventListener("click", () => {
     setEditorExpanded(ui.editorToggle.getAttribute("aria-expanded") !== "true");
   });
-  stackedLayout.addEventListener("change", () => setEditorExpanded(!stackedLayout.matches));
-  setEditorExpanded(!stackedLayout.matches);
+  ui.terminalToggle.addEventListener("click", () => {
+    setEditorExpanded(ui.terminalToggle.getAttribute("aria-expanded") === "true");
+  });
+  stackedLayout.addEventListener("change", () => setEditorExpanded(true));
+  setEditorExpanded(true);
 
   // URL formats: "#z=" is deflate-raw compressed UTF-8, "#code=" is plain UTF-8.
   // Both are base64url. "#code=" is the synchronous fallback (used while a tab is

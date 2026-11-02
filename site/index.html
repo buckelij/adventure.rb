@@ -40,7 +40,8 @@
         <div class="pane-title editor-title">
           <span class="editor-label">main.rb</span>
           <button id="editor-toggle" class="editor-toggle" aria-expanded="true" aria-controls="editor-content">
-            <span>main.rb</span><span id="editor-toggle-icon" aria-hidden="true">-</span>
+            <img class="pane-toggle-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@0.468.0/icons/chevron-down.svg" alt="" width="16" height="16" />
+            <span>Edit: main.rb</span>
           </button>
         </div>
         <div id="editor-content" class="editor-content">
@@ -49,7 +50,13 @@
       </section>
       <div class="divider" id="divider" role="separator" aria-orientation="vertical" tabindex="0"></div>
       <section class="pane terminal-pane" aria-label="Terminal">
-        <div class="pane-title">Terminal <span class="hint">irb · type Ruby and press Enter</span></div>
+        <div class="pane-title terminal-title">
+          <span class="terminal-label">Terminal <span class="hint">irb · type Ruby and press Enter</span></span>
+          <button id="terminal-toggle" class="terminal-toggle" aria-expanded="true" aria-controls="terminal">
+            <img class="pane-toggle-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@0.468.0/icons/chevron-down.svg" alt="" width="16" height="16" />
+            <span>Run</span>
+          </button>
+        </div>
         <div id="terminal" class="terminal">
           <pre id="term-output"><span id="term-input-line" hidden><span id="term-prompt"></span><span id="term-input" contenteditable="true" spellcheck="false" autocapitalize="off" autocorrect="off" role="textbox" aria-label="Terminal input"></span></span></pre>
         </div>

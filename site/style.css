@@ -119,7 +119,7 @@ button.primary:hover:not(:disabled) { background: var(--accent-2); }
 
 .pane-title .hint { margin-left: 8px; opacity: 0.7; }
 
-.editor-toggle { display: none; }
+.editor-toggle, .terminal-toggle { display: none; }
 .editor-content { display: flex; flex: 1; min-height: 0; }
 
 .divider {
@@ -215,15 +215,16 @@ button.primary:hover:not(:disabled) { background: var(--accent-2); }
   body { height: 100dvh; }
   .toolbar { flex-shrink: 0; }
   .workspace { flex-direction: column; }
-  .editor-pane { flex: 0 0 45% !important; }
-  .editor-pane.editor-collapsed { flex: 0 0 auto !important; }
+  .editor-pane, .terminal-pane { flex: 1 1 0 !important; }
+  .editor-pane.editor-collapsed, .terminal-pane.terminal-collapsed { flex: 0 0 auto !important; }
   .editor-collapsed .editor-content { display: none; }
-  .editor-title { padding: 0; }
-  .editor-label { display: none; }
-  .editor-toggle {
+  .terminal-collapsed .terminal { display: none; }
+  .editor-title, .terminal-title { padding: 0; flex-shrink: 0; }
+  .editor-label, .terminal-label { display: none; }
+  .editor-toggle, .terminal-toggle {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 8px;
     width: 100%;
     min-height: 44px;
     padding: 6px 12px;
@@ -233,7 +234,9 @@ button.primary:hover:not(:disabled) { background: var(--accent-2); }
     color: inherit;
     font: inherit;
   }
-  .editor-toggle:focus-visible { outline: 2px solid var(--accent-2); outline-offset: -2px; }
+  .editor-toggle:focus-visible, .terminal-toggle:focus-visible { outline: 2px solid var(--accent-2); outline-offset: -2px; }
+  .pane-toggle-icon { flex-shrink: 0; filter: brightness(0) invert(1); transform: rotate(-90deg); }
+  [aria-expanded="true"] > .pane-toggle-icon { transform: rotate(0); }
   .terminal { overscroll-behavior: contain; }
   .divider { display: none; }
   .status { margin-left: 0; width: 100%; }
