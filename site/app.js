@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const RUBY_WASM_URL = "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.10.1/dist/ruby+stdlib.wasm";
+  const RUBY_WASM_URL = "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.10.1/dist/ruby.wasm";
   const STORAGE_KEY = "adventure.rb:code";
   const MAX_OUTPUT_CHARS = 500_000;
 

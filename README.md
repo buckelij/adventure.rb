@@ -27,6 +27,11 @@ responsive and a stuck program can be terminated. [`site/prelude.rb`](site/prelu
 `JS::Object#await` suspends the Ruby VM (via Asyncify) until the terminal sends the line back.
 No `SharedArrayBuffer` or cross-origin isolation headers are needed, so it works on GitHub Pages.
 
+The site uses the smaller `ruby.wasm` binary without the bundled standard-library
+files and gems to reduce download size and memory use. Built-in Ruby features,
+interactive input/output, and the custom REPL remain available, but programs
+cannot rely on the omitted libraries being available through `require`.
+
 ## Development
 
 ```sh
