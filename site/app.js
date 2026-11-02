@@ -442,16 +442,24 @@
     term.lastChar = "\n";
   }
 
+  let terminalScrollScheduled = false;
+
   function scrollToBottom() {
     ui.terminal.scrollTop = ui.terminal.scrollHeight;
+    if (terminalScrollScheduled) return;
+    terminalScrollScheduled = true;
+    requestAnimationFrame(() => {
+      terminalScrollScheduled = false;
+      ui.terminal.scrollTop = ui.terminal.scrollHeight;
+    });
   }
 
   const touchInput = window.matchMedia("(hover: none) and (pointer: coarse)");
 
   function keepInputVisible() {
-    if (document.activeElement !== ui.input) return;
+    if (ui.inputLine.hidden) return;
     requestAnimationFrame(() => {
-      if (document.activeElement !== ui.input) return;
+      if (ui.inputLine.hidden) return;
       scrollToBottom();
     });
   }
