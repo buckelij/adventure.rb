@@ -445,12 +445,19 @@
   let terminalScrollScheduled = false;
 
   function scrollToBottom() {
-    ui.terminal.scrollTop = ui.terminal.scrollHeight;
+    const scroll = () => {
+      const clearance = stackedLayout.matches && !ui.inputLine.hidden
+        ? Math.min(96, ui.terminal.clientHeight / 3)
+        : 0;
+      ui.output.style.paddingBottom = `${clearance}px`;
+      ui.terminal.scrollTop = ui.terminal.scrollHeight;
+    };
+    scroll();
     if (terminalScrollScheduled) return;
     terminalScrollScheduled = true;
     requestAnimationFrame(() => {
       terminalScrollScheduled = false;
-      ui.terminal.scrollTop = ui.terminal.scrollHeight;
+      scroll();
     });
   }
 
@@ -466,7 +473,7 @@
 
   function updateViewport() {
     const viewport = window.visualViewport;
-    if (viewport && viewport.scale === 1) {
+    if (viewport) {
       document.documentElement.style.setProperty("--viewport-height", `${viewport.height}px`);
       document.documentElement.style.setProperty("--viewport-top", `${viewport.offsetTop}px`);
     }
@@ -474,6 +481,7 @@
   }
 
   ui.input.addEventListener("focus", updateViewport);
+  ui.input.addEventListener("input", keepInputVisible);
   window.visualViewport?.addEventListener("resize", updateViewport);
   window.visualViewport?.addEventListener("scroll", updateViewport);
   updateViewport();
