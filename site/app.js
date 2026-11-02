@@ -54,11 +54,11 @@
 
   function setEditorExpanded(expanded) {
     const editorExpanded = !stackedLayout.matches || expanded;
-    const terminalExpanded = !stackedLayout.matches || !expanded;
+    const terminalExpanded = !stackedLayout.matches || !expanded || !ui.terminalToggle;
     ui.editorPane.classList.toggle("editor-collapsed", !editorExpanded);
     ui.editorToggle.setAttribute("aria-expanded", String(editorExpanded));
     ui.terminalPane.classList.toggle("terminal-collapsed", !terminalExpanded);
-    ui.terminalToggle.setAttribute("aria-expanded", String(terminalExpanded));
+    ui.terminalToggle?.setAttribute("aria-expanded", String(terminalExpanded));
     if (editorExpanded) editor.refresh();
     if (terminalExpanded) ui.terminal.scrollTop = ui.terminal.scrollHeight;
   }
@@ -66,7 +66,7 @@
   ui.editorToggle.addEventListener("click", () => {
     setEditorExpanded(ui.editorToggle.getAttribute("aria-expanded") !== "true");
   });
-  ui.terminalToggle.addEventListener("click", () => {
+  ui.terminalToggle?.addEventListener("click", () => {
     setEditorExpanded(ui.terminalToggle.getAttribute("aria-expanded") === "true");
   });
   stackedLayout.addEventListener("change", () => setEditorExpanded(true));
@@ -153,7 +153,8 @@
   const examples = document.createElement("optgroup");
   examples.label = "Examples";
   window.EXAMPLES.forEach((example, index) => examples.append(new Option(example.name, String(index))));
-  ui.examples.append(savedPrograms, examples);
+  if (programs.length) ui.examples.append(savedPrograms);
+  ui.examples.append(examples);
 
   function saveCurrentProgram() {
     if (!documentLoaded) return true;
@@ -167,6 +168,7 @@
       currentProgram = { id: crypto.randomUUID(), name, code };
       programs.push(currentProgram);
       savedPrograms.append(new Option(name, `program:${currentProgram.id}`));
+      if (!savedPrograms.isConnected) ui.examples.insertBefore(savedPrograms, examples);
     }
     currentProgram.code = code;
     ui.examples.value = `program:${currentProgram.id}`;
