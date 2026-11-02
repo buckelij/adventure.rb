@@ -37,6 +37,7 @@
     mode: "ruby",
     theme: "material-darker",
     lineNumbers: true,
+    lineWrapping: true,
     matchBrackets: true,
     indentUnit: 2,
     tabSize: 2,
