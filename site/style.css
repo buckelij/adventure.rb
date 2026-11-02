@@ -1,11 +1,11 @@
 :root {
-  --bg: #16161a;
-  --panel: #212121;
-  --border: #33333a;
-  --text: #e4e4e7;
-  --muted: #8b8b95;
-  --accent: #e0115f;
-  --accent-2: #ff4f8b;
+  --bg: #171b19;
+  --panel: #212622;
+  --border: #354139;
+  --text: #edf2ee;
+  --muted: #a1aea5;
+  --accent: #00843d;
+  --accent-2: #81dba6;
   --error: #ff6b6b;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
 }
@@ -31,8 +31,17 @@ body {
   flex-wrap: wrap;
   gap: 12px;
   padding: 8px 16px;
+  background: #edf8ef;
+  color: #183a2a;
+  border-top: 4px solid var(--accent);
   border-bottom: 1px solid var(--border);
 }
+
+.brand { flex-shrink: 0; }
+.class-label { display: block; font-size: 0.75rem; color: #3c634c; }
+.toolbar .accent { color: var(--accent); }
+.toolbar .status { color: #3c634c; }
+.toolbar .status.error { color: #a52222; }
 
 .toolbar h1 {
   margin: 0 8px 0 0;
@@ -46,7 +55,16 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  min-width: 0;
 }
+
+.examples { min-width: 0; max-width: 100%; }
+.examples select { width: 230px; max-width: 100%; text-overflow: ellipsis; }
+.toolbar button, .toolbar select { background: #fff; color: #183a2a; border-color: #b7cfbe; }
+.toolbar button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.button-icon { flex-shrink: 0; }
+.docs-link { display: inline-flex; align-items: center; gap: 6px; padding: 5px 2px; color: #145b35; font-size: 0.9rem; }
+.docs-link:hover { color: #003d1c; }
 
 button, select {
   font: inherit;
@@ -100,6 +118,9 @@ button.primary:hover:not(:disabled) { background: var(--accent-2); }
 }
 
 .pane-title .hint { margin-left: 8px; opacity: 0.7; }
+
+.editor-toggle { display: none; }
+.editor-content { display: flex; flex: 1; min-height: 0; }
 
 .divider {
   flex: 0 0 6px;
@@ -167,9 +188,53 @@ button.primary:hover:not(:disabled) { background: var(--accent-2); }
   clip: rect(0 0 0 0);
 }
 
+.pictures-dialog {
+  width: min(920px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: auto;
+}
+.pictures-dialog::backdrop { background: rgb(0 0 0 / 65%); }
+.pictures-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--panel); z-index: 1; }
+.pictures-header h2 { margin: 0; font-size: 1.1rem; }
+.icon-button { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 6px; flex-shrink: 0; }
+.icon-button img { filter: brightness(0) invert(1); }
+.picture-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 16px; padding: 16px; }
+.picture { display: flex; flex-direction: column; margin: 0; padding: 12px; min-width: 0; border: 1px solid var(--border); border-radius: 6px; background: #171d19; }
+.picture figcaption { color: var(--accent-2); text-transform: capitalize; font-weight: 600; }
+.picture-preview { flex: 1 0 auto; min-height: 80px; max-height: 300px; overflow: auto; margin: 12px 0; font: 13px/1.35 var(--font-mono); }
+.picture-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.picture-footer code { min-width: 0; overflow-wrap: anywhere; font: 12px/1.5 var(--font-mono); }
+.picture-status { min-height: 1.5em; margin: 0; padding: 0 16px 12px; color: var(--accent-2); font-size: 0.85rem; }
+
 @media (max-width: 800px) {
+  body { height: 100dvh; }
+  .toolbar { flex-shrink: 0; }
   .workspace { flex-direction: column; }
   .editor-pane { flex: 0 0 45% !important; }
+  .editor-pane.editor-collapsed { flex: 0 0 auto !important; }
+  .editor-collapsed .editor-content { display: none; }
+  .editor-title { padding: 0; }
+  .editor-label { display: none; }
+  .editor-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 44px;
+    padding: 6px 12px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+  }
+  .editor-toggle:focus-visible { outline: 2px solid var(--accent-2); outline-offset: -2px; }
+  .terminal { overscroll-behavior: contain; }
   .divider { display: none; }
   .status { margin-left: 0; width: 100%; }
 }

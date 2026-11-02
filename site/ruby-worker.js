@@ -24,13 +24,22 @@ async function init(module) {
   console.log = (text) => post({ type: "stdout", text });
   console.warn = (text) => post({ type: "stderr", text });
   try {
-    ({ vm } = await self["ruby-wasm-wasi"].DefaultRubyVM(module));
+    ({ vm } = await self["ruby-wasm-wasi"].DefaultRubyVM(module, {
+      env: { RUBYOPT: "--disable=gems,error_highlight,did_you_mean,syntax_suggest" },
+    }));
   } finally {
     Object.assign(console, { log, warn });
   }
   const prelude = await (await fetch("prelude.rb")).text();
   vm.eval(prelude);
-  post({ type: "ready", description: vm.eval("RUBY_DESCRIPTION").toString() });
+  const pictures = [];
+  self.__rubyPicture = (name, art) => pictures.push({ name, art });
+  try {
+    vm.eval("Pictures.constants(false).sort.each { |name| JS.global.call(:__rubyPicture, name.to_s, Pictures.const_get(name)) }");
+  } finally {
+    delete self.__rubyPicture;
+  }
+  post({ type: "ready", description: vm.eval("RUBY_DESCRIPTION").toString(), pictures });
 }
 
 async function evaluate(rubyCall, input) {

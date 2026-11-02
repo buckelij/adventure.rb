@@ -11,25 +11,41 @@
   </head>
   <body>
     <header class="toolbar">
-      <h1>adventure<span class="accent">.rb</span></h1>
+      <div class="brand">
+        <h1>adventure<span class="accent">.rb</span></h1>
+        <span class="class-label">Girl Scouts coding class</span>
+      </div>
       <div class="actions">
         <label class="examples">
-          <span class="visually-hidden">Example</span>
-          <select id="examples" aria-label="Load an example"></select>
+          <span class="visually-hidden">Program</span>
+          <select id="examples" aria-label="Choose a program"></select>
         </label>
         <button id="run" class="primary" disabled title="Run (Ctrl/⌘ + Enter)">▶ Run</button>
         <button id="stop" disabled title="Stop the running program (Ctrl + C in the terminal)">■ Stop</button>
         <button id="reset" disabled title="Start a fresh Ruby VM">↺ Reset</button>
         <button id="clear" title="Clear the terminal (Ctrl + L)">Clear</button>
         <button id="share" title="Copy a link to this code">Share</button>
+        <button id="pictures" disabled title="Preview available pictures">
+          <img class="button-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@0.468.0/icons/images.svg" alt="" width="16" height="16" />Pictures
+        </button>
+        <a class="docs-link" href="https://docs.ruby-lang.org/en/3.4/" target="_blank" rel="noopener noreferrer" title="Official Ruby documentation (opens in a new tab)">
+          Ruby docs<img class="button-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@0.468.0/icons/external-link.svg" alt="" width="16" height="16" />
+        </a>
       </div>
       <span id="status" class="status" role="status">Loading Ruby…</span>
     </header>
 
     <main class="workspace">
       <section class="pane editor-pane" aria-label="Editor">
-        <div class="pane-title">main.rb</div>
-        <textarea id="editor" aria-label="Ruby source code"></textarea>
+        <div class="pane-title editor-title">
+          <span class="editor-label">main.rb</span>
+          <button id="editor-toggle" class="editor-toggle" aria-expanded="true" aria-controls="editor-content">
+            <span>main.rb</span><span id="editor-toggle-icon" aria-hidden="true">-</span>
+          </button>
+        </div>
+        <div id="editor-content" class="editor-content">
+          <textarea id="editor" aria-label="Ruby source code"></textarea>
+        </div>
       </section>
       <div class="divider" id="divider" role="separator" aria-orientation="vertical" tabindex="0"></div>
       <section class="pane terminal-pane" aria-label="Terminal">
@@ -39,6 +55,17 @@
         </div>
       </section>
     </main>
+
+    <dialog id="pictures-dialog" class="pictures-dialog" aria-labelledby="pictures-heading">
+      <div class="pictures-header">
+        <h2 id="pictures-heading">Pictures</h2>
+        <button id="pictures-close" class="icon-button" aria-label="Close pictures" title="Close pictures">
+          <img src="https://cdn.jsdelivr.net/npm/lucide-static@0.468.0/icons/x.svg" alt="" width="18" height="18" />
+        </button>
+      </div>
+      <div id="picture-gallery" class="picture-gallery"></div>
+      <p id="picture-status" class="picture-status" role="status"></p>
+    </dialog>
 
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/lib/codemirror.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.21/mode/ruby/ruby.min.js"></script>

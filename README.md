@@ -18,6 +18,14 @@ powered by [ruby.wasm](https://github.com/ruby/ruby.wasm) (CRuby 3.4 compiled to
   entries), so reopening an accidentally closed tab brings your work back. **Share** copies that link.
   Code is deflate-compressed and base64url-encoded (`#z=…`); plain `#code=…` links also work.
 - `sleep`, ANSI colors and `warn`/`$stderr` are supported.
+- **My programs**: editing an example automatically creates a saved version in the program
+  dropdown. Switching examples keeps your edits; saved programs survive reloads in the same
+  browser. If saving fails, program switching is disabled to protect the current work.
+- **Pictures** previews all built-in artwork and copies its Ruby code without changing your program.
+- **Ruby docs** opens the official Ruby 3.4 documentation in a new tab.
+
+The classroom theme uses Girl Scouts green accents. Saved programs are local to the browser,
+not an account or cloud backup; Share still links to the currently open program only.
 
 ## How it works
 

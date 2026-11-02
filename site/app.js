@@ -3,6 +3,7 @@
 
   const RUBY_WASM_URL = "https://cdn.jsdelivr.net/npm/@ruby/3.4-wasm-wasi@2.10.1/dist/ruby.wasm";
   const STORAGE_KEY = "adventure.rb:code";
+  const PROGRAMS_KEY = "adventure.rb:programs";
   const MAX_OUTPUT_CHARS = 500_000;
 
   const $ = (id) => document.getElementById(id);
@@ -21,6 +22,12 @@
     input: $("term-input"),
     divider: $("divider"),
     editorPane: document.querySelector(".editor-pane"),
+    editorToggle: $("editor-toggle"),
+    editorToggleIcon: $("editor-toggle-icon"),
+    pictures: $("pictures"),
+    picturesDialog: $("pictures-dialog"),
+    pictureGallery: $("picture-gallery"),
+    pictureStatus: $("picture-status"),
   };
 
   // ---------------------------------------------------------------------------
@@ -41,6 +48,21 @@
       "Shift-Tab": (cm) => cm.indentSelection("subtract"),
     },
   });
+
+  const stackedLayout = window.matchMedia("(max-width: 800px)");
+
+  function setEditorExpanded(expanded) {
+    ui.editorPane.classList.toggle("editor-collapsed", !expanded);
+    ui.editorToggle.setAttribute("aria-expanded", String(expanded));
+    ui.editorToggleIcon.textContent = expanded ? "-" : "+";
+    if (expanded) editor.refresh();
+  }
+
+  ui.editorToggle.addEventListener("click", () => {
+    setEditorExpanded(ui.editorToggle.getAttribute("aria-expanded") !== "true");
+  });
+  stackedLayout.addEventListener("change", () => setEditorExpanded(!stackedLayout.matches));
+  setEditorExpanded(!stackedLayout.matches);
 
   // URL formats: "#z=" is deflate-raw compressed UTF-8, "#code=" is plain UTF-8.
   // Both are base64url. "#code=" is the synchronous fallback (used while a tab is
@@ -102,6 +124,54 @@
   // replaceState keeps edits from piling up as back-button entries.
   let saveTimer = null;
   let saveSeq = 0;
+  let loadingCode = false;
+  let documentLoaded = false;
+  let currentProgram = null;
+  let currentName = "My program";
+  let programs = [];
+  try {
+    const saved = JSON.parse(localStorage.getItem(PROGRAMS_KEY) ?? "[]");
+    if (Array.isArray(saved)) {
+      programs = saved.filter((program) => program &&
+        [program.id, program.name, program.code].every((value) => typeof value === "string"));
+    }
+  } catch {
+    ui.examples.disabled = true;
+  }
+
+  const savedPrograms = document.createElement("optgroup");
+  savedPrograms.label = "My programs";
+  programs.forEach((program) => savedPrograms.append(new Option(program.name, `program:${program.id}`)));
+  const examples = document.createElement("optgroup");
+  examples.label = "Examples";
+  window.EXAMPLES.forEach((example, index) => examples.append(new Option(example.name, String(index))));
+  ui.examples.append(savedPrograms, examples);
+
+  function saveCurrentProgram() {
+    if (!documentLoaded) return true;
+    const code = editor.getValue();
+    if (!currentProgram && window.EXAMPLES.some((example) => example.code === code)) return true;
+    if (!currentProgram) {
+      const base = currentName === "My program" ? currentName : `${currentName} (my version)`;
+      let name = base;
+      let number = 2;
+      while (programs.some((program) => program.name === name)) name = `${base} ${number++}`;
+      currentProgram = { id: crypto.randomUUID(), name, code };
+      programs.push(currentProgram);
+      savedPrograms.append(new Option(name, `program:${currentProgram.id}`));
+    }
+    currentProgram.code = code;
+    ui.examples.value = `program:${currentProgram.id}`;
+    try {
+      localStorage.setItem(PROGRAMS_KEY, JSON.stringify(programs));
+      return true;
+    } catch {
+      ui.examples.disabled = true;
+      showError("Storage is full or unavailable. Program switching is disabled to protect your work.");
+      return false;
+    }
+  }
+
   async function persistCode() {
     clearTimeout(saveTimer);
     saveTimer = null;
@@ -115,6 +185,8 @@
   }
 
   editor.on("change", () => {
+    if (loadingCode) return;
+    saveCurrentProgram();
     clearTimeout(saveTimer);
     saveTimer = setTimeout(persistCode, 500);
   });
@@ -129,13 +201,28 @@
   window.addEventListener("pagehide", flushPendingSave);
   document.addEventListener("visibilitychange", () => document.visibilityState === "hidden" && flushPendingSave());
 
-  function loadCode(code) {
+  function loadCode(code, program = null) {
+    if (!saveCurrentProgram()) return false;
     saveSeq++;
-    editor.setValue(code);
+    loadingCode = true;
+    try {
+      editor.setValue(code);
+    } finally {
+      loadingCode = false;
+    }
+    currentProgram = program ?? programs.find((saved) => saved.code === code) ?? null;
+    const exampleIndex = window.EXAMPLES.findIndex((example) => example.code === code);
+    currentName = currentProgram?.name ?? window.EXAMPLES[exampleIndex]?.name ?? "My program";
+    documentLoaded = true;
+    if (currentProgram) ui.examples.value = `program:${currentProgram.id}`;
+    else if (exampleIndex >= 0) ui.examples.value = String(exampleIndex);
+    else saveCurrentProgram();
+    editor.clearHistory();
     // setValue fires "change"; this code is already saved, so cancel that save.
     clearTimeout(saveTimer);
     saveTimer = null;
     localStorage.setItem(STORAGE_KEY, code);
+    return true;
   }
 
   // Pasting a different share link into this tab only changes the hash.
@@ -151,15 +238,17 @@
     await persistCode();
   })();
 
-  ui.examples.append(new Option("Examples…", ""));
-  window.EXAMPLES.forEach((example, i) => ui.examples.append(new Option(example.name, String(i))));
   ui.examples.addEventListener("change", () => {
-    const example = window.EXAMPLES[Number(ui.examples.value)];
-    if (example) {
-      editor.setValue(example.code);
+    const value = ui.examples.value;
+    const program = value.startsWith("program:")
+      ? programs.find((saved) => `program:${saved.id}` === value)
+      : null;
+    const selected = program ?? window.EXAMPLES[Number(value)];
+    if (selected && loadCode(selected.code, program)) {
+      persistCode();
+      if (stackedLayout.matches) setEditorExpanded(true);
       editor.focus();
     }
-    ui.examples.value = "";
   });
 
   ui.share.addEventListener("click", async () => {
@@ -169,6 +258,55 @@
       flashStatus("Link copied to clipboard");
     } catch {
       flashStatus("Link is in the address bar");
+    }
+  });
+
+  function renderPictures(pictures) {
+    if (ui.pictureGallery.childElementCount) return;
+    for (const { name, art } of pictures) {
+      const picture = document.createElement("figure");
+      picture.className = "picture";
+      const caption = document.createElement("figcaption");
+      caption.textContent = name === "GIRLSCOUTS" ? "Girl Scouts" : name.toLowerCase().replace(/_/g, " ");
+      const preview = document.createElement("pre");
+      preview.className = "picture-preview";
+      preview.textContent = art;
+      const footer = document.createElement("div");
+      footer.className = "picture-footer";
+      const code = document.createElement("code");
+      code.textContent = `puts Pictures::${name}`;
+      const copy = document.createElement("button");
+      copy.className = "icon-button";
+      copy.dataset.code = code.textContent;
+      copy.dataset.name = name;
+      copy.setAttribute("aria-label", `Copy ${name} Ruby code`);
+      copy.title = "Copy Ruby code";
+      const icon = document.createElement("img");
+      icon.src = "https://cdn.jsdelivr.net/npm/lucide-static@0.468.0/icons/copy.svg";
+      icon.alt = "";
+      icon.width = 16;
+      icon.height = 16;
+      copy.append(icon);
+      footer.append(code, copy);
+      picture.append(caption, preview, footer);
+      ui.pictureGallery.append(picture);
+    }
+    ui.pictures.disabled = false;
+  }
+
+  ui.pictures.addEventListener("click", () => {
+    ui.pictureStatus.textContent = "";
+    ui.picturesDialog.showModal();
+  });
+  $("pictures-close").addEventListener("click", () => ui.picturesDialog.close());
+  ui.pictureGallery.addEventListener("click", async (event) => {
+    const button = event.target.closest("button[data-code]");
+    if (!button) return;
+    try {
+      await navigator.clipboard.writeText(button.dataset.code);
+      ui.pictureStatus.textContent = `${button.dataset.name} code copied.`;
+    } catch {
+      ui.pictureStatus.textContent = "Clipboard unavailable.";
     }
   });
 
@@ -440,6 +578,7 @@
       worker.onmessage = ({ data }) => {
         if (data.type === "ready") {
           state.description = data.description;
+          renderPictures(data.pictures);
           setMode("idle");
           resolve();
         } else if (data.type === "fatal") {
@@ -513,6 +652,7 @@
 
   async function run() {
     if (!state.module) return;
+    if (stackedLayout.matches) setEditorExpanded(false);
     const code = editor.getValue();
     localStorage.setItem(STORAGE_KEY, code);
     clearTerminal();
