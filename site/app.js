@@ -27,6 +27,8 @@
     picturesDialog: $("pictures-dialog"),
     pictureGallery: $("picture-gallery"),
     pictureStatus: $("picture-status"),
+    glossary: $("glossary"),
+    glossaryDialog: $("glossary-dialog"),
   };
 
   // ---------------------------------------------------------------------------
@@ -308,6 +310,8 @@
     ui.picturesDialog.showModal();
   });
   $("pictures-close").addEventListener("click", () => ui.picturesDialog.close());
+  ui.glossary.addEventListener("click", () => ui.glossaryDialog.showModal());
+  $("glossary-close").addEventListener("click", () => ui.glossaryDialog.close());
   ui.pictureGallery.addEventListener("click", async (event) => {
     const button = event.target.closest("button[data-code]");
     if (!button) return;

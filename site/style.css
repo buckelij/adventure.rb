@@ -216,6 +216,11 @@ button.primary:hover:not(:disabled) { background: var(--accent-2); }
 .picture-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .picture-footer code { min-width: 0; overflow-wrap: anywhere; font: 12px/1.5 var(--font-mono); }
 .picture-status { min-height: 1.5em; margin: 0; padding: 0 16px 12px; color: var(--accent-2); font-size: 0.85rem; }
+.glossary-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 0 24px; margin: 0; padding: 8px 16px 16px; }
+.glossary-list > div { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.glossary-list dt { color: var(--accent-2); font-weight: 700; }
+.glossary-list dd { margin: 4px 0 0; line-height: 1.5; }
+.glossary-list code { font: 0.9em var(--font-mono); color: #b7d9ff; }
 
 @media (max-width: 800px) {
   body {

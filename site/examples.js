@@ -7,7 +7,7 @@ window.EXAMPLES = [
 # ==   - compare two values
 # if   - do something when two values are the same
 
-# Pictures is available by default.
+# A set of predefined Pictures are available in the Pictures class.
 
 loop do
   puts "Welcome to my game. Try to do it if you dare!"
